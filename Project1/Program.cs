@@ -1,6 +1,19 @@
+using Microsoft.EntityFrameworkCore;
+using Project1.Data;
+using Project1.Services;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
+var connectionString = builder.Configuration.GetConnectionString("DefaultConnection")
+    ?? "Server=(localdb)\\mssqllocaldb;Database=BankingDb;Trusted_Connection=true;MultipleActiveResultSets=true";
+
+builder.Services.AddDbContext<BankingContext>(options =>
+    options.UseSqlServer(connectionString));
+
+// Register banking services
+builder.Services.AddScoped<ICustomerService, CustomerService>();
+builder.Services.AddScoped<IPaymentService, PaymentService>();
 
 builder.Services.AddControllersWithViews();
 
